@@ -1,0 +1,56 @@
+{
+  "name": "phsycue-pro",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/phsycue-pro/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "platform": "node",
+        "outputPath": "dist/apps/phsycue-pro",
+        "format": ["cjs"],
+        "bundle": false,
+        "main": "apps/phsycue-pro/src/main.ts",
+        "tsConfig": "apps/phsycue-pro/tsconfig.app.json",
+        "assets": ["apps/phsycue-pro/src/assets"],
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
+      },
+      "configurations": {
+        "development": {},
+        "production": {
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "phsycue-pro:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "phsycue-pro:build:development"
+        },
+        "production": {
+          "buildTarget": "phsycue-pro:build:production"
+        }
+      }
+    }
+  }
+}

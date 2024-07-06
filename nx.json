@@ -35,5 +35,6 @@
       },
       "exclude": ["apps/phsycue-pro-e2e/**/*"]
     }
-  ]
+  ],
+  "nxCloudAccessToken": "YTc5NzIxMjgtZGExYS00YzkwLWEzMGEtZjlkNjY3OWM3ODA5fHJlYWQtd3JpdGU="
 }

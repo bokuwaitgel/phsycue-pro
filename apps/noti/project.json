@@ -1,0 +1,24 @@
+{
+  "name": "noti",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/noti/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "noti:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "noti:build:development"
+        },
+        "production": {
+          "buildTarget": "noti:build:production"
+        }
+      }
+    }
+  }
+}

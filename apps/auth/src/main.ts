@@ -1,58 +1,36 @@
-import Fastify from 'fastify';
-import fastifyJwt from '@fastify/jwt';
-import fastifySwagger from '@fastify/swagger';
-import fastifySwaggerUi from '@fastify/swagger-ui';
-import { authRoutes } from './app/auth.routes';
+import { Logger } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import {ConfigService} from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
 
-const host = process.env.HOST ?? 'localhost';
-const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+import { AuthModule } from './app/app.module';
 
-const app = Fastify({
-  logger: true,
-});
+async function bootstrap() {
+  const app = await NestFactory.create(AuthModule);
+  const globalPrefix = 'api';
+  app.setGlobalPrefix(globalPrefix);
+  const configService = app.get(ConfigService);
 
-app.register(fastifyJwt, {
-  secret: process.env.JWT_SECRET || 'your-secret-key',
-});
+  const port = configService.get('PORT')
 
-// Register Swagger
-app.register(fastifySwagger, {
-  openapi: {
-    info: {
-      title: 'Auth API',
-      description: 'API for user authentication',
-      version: '1.0.0',
-    },
-    servers: [
-      {
-        url: `http://${host}:${port}`,
-      },
-    ],
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-        },
-      },
-    },
-  },
-});
+  const config = new DocumentBuilder()
+    .setTitle('Phsycue Pro '+configService.get('SERVICE_NAME')+' API')
+    .setDescription('API description')
+    .setVersion('1.0')
+    .addBearerAuth({
+      description: 'Default JWT Authorization',
+      type: 'http',
+      in: 'header',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+    })
+    .addTag(configService.get('SERVICE_NAME'))
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
-// Register Swagger UI
-app.register(fastifySwaggerUi, {
-  routePrefix: '/documentation',
-});
+  await app.listen(port, '0.0.0.0');
+  Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
+}
 
-app.register(authRoutes);
-
-app.listen({ port, host }, (err) => {
-  if (err) {
-    app.log.error(err);
-    process.exit(1);
-  } else {
-    console.log(`[ ready ] http://${host}:${port}`);
-    console.log(`[ docs  ] http://${host}:${port}/documentation`);
-  }
-});
+bootstrap();

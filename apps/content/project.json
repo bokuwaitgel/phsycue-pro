@@ -1,0 +1,24 @@
+{
+  "name": "content",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/content/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "content:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "content:build:development"
+        },
+        "production": {
+          "buildTarget": "content:build:production"
+        }
+      }
+    }
+  }
+}

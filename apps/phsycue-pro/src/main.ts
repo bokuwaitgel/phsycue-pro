@@ -1,23 +1,36 @@
-import Fastify from 'fastify';
-import { app } from './app/app';
+import { Logger } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import {ConfigService} from '@nestjs/config';
+import { NestFactory } from '@nestjs/core';
 
-const host = process.env.HOST ?? 'localhost';
-const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+import { AppModule } from './app/app.module';
 
-// Instantiate Fastify with some config
-const server = Fastify({
-  logger: true,
-});
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  const globalPrefix = 'api';
+  app.setGlobalPrefix(globalPrefix);
+  const configService = app.get(ConfigService);
 
-// Register your application as a normal plugin.
-server.register(app);
+  const port = configService.get('PORT')
 
-// Start listening.
-server.listen({ port, host }, (err) => {
-  if (err) {
-    server.log.error(err);
-    process.exit(1);
-  } else {
-    console.log(`[ ready ] http://${host}:${port}`);
-  }
-});
+  const config = new DocumentBuilder()
+    .setTitle('Phsycue Pro  API')
+    .setDescription('API description')
+    .setVersion('1.0')
+    .addBearerAuth({
+      description: 'Default JWT Authorization',
+      type: 'http',
+      in: 'header',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+    })
+    .addTag('physicue-pro')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
+  await app.listen(port, '0.0.0.0');
+  Logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
+}
+
+bootstrap();

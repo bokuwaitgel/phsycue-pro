@@ -1,0 +1,24 @@
+{
+  "name": "meal-service",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/meal-service/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "meal-service:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "meal-service:build:development"
+        },
+        "production": {
+          "buildTarget": "meal-service:build:production"
+        }
+      }
+    }
+  }
+}

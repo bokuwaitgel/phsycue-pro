@@ -1,7 +1,10 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
     "production": [
       "default",
       "!{projectRoot}/.eslintrc.json",
@@ -17,8 +20,13 @@
   "targetDefaults": {
     "@nx/esbuild:esbuild": {
       "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "production",
+        "^production"
+      ]
     }
   },
   "plugins": [
@@ -33,7 +41,30 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/phsycue-pro-e2e/**/*", "apps/auth-e2e/**/*"]
+      "exclude": [
+        "apps/phsycue-pro-e2e/**/*",
+        "apps/auth-e2e/**/*",
+        "apps/auth-e2e/**/*",
+        "auth-e2e/**/*",
+        "apps/auth-e2e/**/*",
+        "apps/auth-e2e/**/*",
+        "apps/sms-e2e/**/*",
+        "apps/course-service-e2e/**/*",
+        "apps/meal-service-e2e/**/*",
+        "apps/survey-service-e2e/**/*",
+        "apps/personal-service-e2e/**/*",
+        "apps/noti-e2e/**/*",
+        "apps/phsycue-pro-e2e/**/*",
+        "apps/content-e2e/**/*"
+      ]
+    },
+    {
+      "plugin": "@nx/webpack/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview"
+      }
     }
   ],
   "nxCloudAccessToken": "YTc5NzIxMjgtZGExYS00YzkwLWEzMGEtZjlkNjY3OWM3ODA5fHJlYWQtd3JpdGU="

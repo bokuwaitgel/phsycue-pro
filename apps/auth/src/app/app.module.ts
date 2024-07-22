@@ -33,6 +33,7 @@ import  config from "./config"
       }),
       inject: [ConfigService],
     }),
+    
   ],
   providers: [AuthService, JwtStrategy, PrismaService, UsersService, JwtAuthGuard],
   controllers: [AuthController, UsersController],

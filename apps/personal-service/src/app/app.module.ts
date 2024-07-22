@@ -6,7 +6,16 @@ import { PrismaService } from '../prisma.service';
 import  config from "./config"
 
 import { AppController } from './app.controller';
+import { BodyController } from './body/body.controller';
+import { FoodController } from './food/food.controller';
+import { WaterController } from './water/water.controller';
+import { SleepController } from './sleep/sleep.controller';
+
 import { AppService } from './app.service';
+import { BodyService } from './body/body.service';
+import { FoodService } from './food/food.service';
+import { WaterService } from './water/water.service';
+import { SleepService } from './sleep/sleep.service';
 
 @Module({
   imports: [
@@ -17,7 +26,7 @@ import { AppService } from './app.service';
     }),
     ScheduleModule.forRoot()
   ],
-  controllers: [AppController],
-  providers: [AppService,PrismaService],
+  controllers: [AppController, BodyController, FoodController, WaterController, SleepController],
+  providers: [AppService, BodyService, FoodService, WaterService, SleepService, PrismaService],
 })
 export class AppModule {}

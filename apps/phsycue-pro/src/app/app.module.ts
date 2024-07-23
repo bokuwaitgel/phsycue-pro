@@ -6,9 +6,11 @@ import  config from "./config"
 
 import { AppController } from './app.controller';
 import { AuthController } from './auth/auth.controller';
+import { UserController } from './user/user.controller';
 
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
+import { UserService } from './user/user.service';
 
 
 
@@ -30,7 +32,7 @@ import { AuthService } from './auth/auth.service';
       },
     ]),
   ],
-  controllers: [AppController, AuthController],
-  providers: [AppService, AuthService],
+  controllers: [AppController, AuthController, UserController],
+  providers: [AppService, AuthService, UserService],
 })
 export class AppModule {}

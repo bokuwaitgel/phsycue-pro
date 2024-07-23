@@ -213,4 +213,6 @@ export class UsersService {
 
     return smsSent;
   }
+
+  // validate user by jwt token and return user
 }

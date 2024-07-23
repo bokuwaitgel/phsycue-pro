@@ -21,6 +21,7 @@ import {
   RefreshTokenDto,
   ChangePasswordDto,
   ResetPasswordDto,
+  verifyTokenDto,
 } from './auth.dtos';
 
 @ApiTags('auth')
@@ -28,6 +29,7 @@ import {
 export class AuthController {
   constructor(
     private authService: AuthService
+
   ) {}
 
   @Post('register')
@@ -54,20 +56,29 @@ export class AuthController {
   public async sendOtp(@Body() otpDto: OtpDto): Promise<any> {
     return await this.authService.sendOtp(otpDto);
   }
-  @Post('changePassword')
-  public async changePassword(@Body() changePasswordDto: ChangePasswordDto): Promise<any> {
-    return await this.authService.changePassword(changePasswordDto);
-  }
   @Post('resetPassword')
+  public async changePassword(@Body() changePasswordDto: ChangePasswordDto): Promise<any> {
+    return await this.authService.resetPassword(changePasswordDto);
+  }
+  @Post('changePassword')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   public async resetPassword(@Req() req, @Body() resetPasswordDto: ResetPasswordDto): Promise<any> {
     const userId = req.user.id;
-    return await this.authService.resetPassword(userId, resetPasswordDto);
+    return await this.authService.changePassword(userId, resetPasswordDto);
   }
 
   @Post('verifyOtp')
   public async verifyOtp(@Body() verifyOtpDto: VerifyOtpDto): Promise<any> {
     return await this.authService.verifyOtp(verifyOtpDto);
+  }
+  
+  @Post('validateToken')
+  async validateToken(@Body() token: verifyTokenDto) {
+    try {
+      return this.authService.verifyToken(token);
+    } catch (e) {
+      return new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+    }
   }
 }

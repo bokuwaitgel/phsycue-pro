@@ -68,3 +68,9 @@ export class VerifyOtpDto {
   otpCode: string;
 }
 
+
+export class verifyTokenDto {
+  @IsNotEmpty()
+  @ApiProperty()
+  token: string;
+}

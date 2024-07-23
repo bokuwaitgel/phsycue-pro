@@ -6,7 +6,7 @@ import { retry } from 'rxjs';
 import {ConfigService} from '@nestjs/config';
 import { PrismaService } from '../prisma.service';
 import { UsersService } from './user/users.service';
-import * as jwt from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 import {
   CreateUserDto,
@@ -15,6 +15,7 @@ import {
   OtpDto,
   ChangePasswordDto,
   ResetPasswordDto,
+  verifyTokenDto,
 } from './auth.dtos';
 import { JwtPayload } from './jwt.strategy';
 
@@ -25,7 +26,6 @@ export class AuthService {
     private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
-    private readonly configService: ConfigService,
   ) {}
 
   async register(userDto: CreateUserDto): Promise<any> {
@@ -187,7 +187,7 @@ export class AuthService {
     };
   }
 
-  async resetPassword(userId: string, resetPasswordDto: ResetPasswordDto) : Promise<any> {
+  async changePassword(userId: string, resetPasswordDto: ResetPasswordDto) : Promise<any> {
     let pwd = "";
     const user = await this.prisma.user.findUnique({
       where: {
@@ -225,7 +225,7 @@ export class AuthService {
       type: 'success',
     };
   }
-  async changePassword(changePasswordDto: ChangePasswordDto) : Promise<any> {
+  async resetPassword(changePasswordDto: ChangePasswordDto) : Promise<any> {
     const user = await this.usersService.findByLogin(changePasswordDto.mobile);
     if (!user) {
       return {
@@ -347,6 +347,34 @@ export class AuthService {
       throw new HttpException('INVALID_TOKEN', HttpStatus.UNAUTHORIZED);
     }
     return user;
+  }
+
+  async verifyToken(data: verifyTokenDto): Promise<any> {
+    try {
+      const decoded = this.jwtService.verify(data.token) as { mobile: string};
+      const user = await this.usersService.findByLogin(decoded.mobile);
+      if (!user) {
+        return {
+          code: HttpStatus.CONFLICT,
+          success: 'false',
+          type: 'failed',
+          message: 'user does not exist',
+        };
+      }
+      return {
+        code: HttpStatus.OK,
+        success: 'true',
+        type: 'success',
+        message: 'valid token',
+      };
+    } catch (err) {
+      return {
+        code: HttpStatus.CONFLICT,
+        success: 'false',
+        type: 'failed',
+        message: 'invalid token',
+      };
+    }
   }
 }
 

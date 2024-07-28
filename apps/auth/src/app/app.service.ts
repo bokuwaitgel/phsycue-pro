@@ -47,9 +47,9 @@ export class AuthService {
         code: HttpStatus.CONFLICT,
       };
     }
-
+    let data;
     try {
-      status.data = await this.usersService.create(userDto);
+      data = await this.usersService.create(userDto);
       status.code = HttpStatus.CREATED;
     } catch (err) {
       status = {
@@ -61,8 +61,14 @@ export class AuthService {
     }
     const tokenAccess = await this._createTokenAccess(status?.data);
     const tokenRefresh = await this._createTokenRefresh(status?.data);
-    status.accessToken = tokenAccess.accessToken;
-    status.refreshToken = tokenRefresh.refreshToken;
+    status.data = {
+      id: data.id,
+      mobile: data.mobile,
+      refreshToken: tokenRefresh.refreshToken,
+      refreshTokenExpiry: tokenRefresh.refreshTokenExpiry,
+      accessToken: tokenAccess.accessToken,
+    };
+  
     return status;
   }
 
@@ -292,12 +298,16 @@ export class AuthService {
     }
 
     return {
-      ...tokenAccess,
-      ...tokenRefresh,
       code: HttpStatus.OK,
       success: true,
       type: 'success',
-      data: user,
+      data: {
+        id: user.id,
+        mobile: user.mobile,
+        refreshToken: tokenRefresh.refreshToken,
+        refreshTokenExpiry: tokenRefresh.refreshTokenExpiry,
+        accessToken: tokenAccess.accessToken,
+      }
     };
   }
 
@@ -381,14 +391,17 @@ export class AuthService {
 export interface RegistrationStatus {
   success: boolean;
   message: string;
-  type: string;
-  data?: User;
-  accessToken?: string;
-  accessTokenExpiry?: Date;
-  refreshToken?: string;
-  refreshTokenExpiry?: Date;
   code: number;
-}
+  type: string;
+  data?: {
+    id: string;
+    mobile: string;
+    refreshToken: string;
+    refreshTokenExpiry: Date;
+    accessToken: string;
+  };
+
+  }
 export interface RegistrationSeederStatus {
   success: boolean;
   message: string;

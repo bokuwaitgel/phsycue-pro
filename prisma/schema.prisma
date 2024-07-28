@@ -169,12 +169,14 @@ model Tracking {
 
 model Courses {
   id                 String   @id @default(uuid())
-  img                String
+  courseImage                String
   courseName         String
   courseDescription  String
   coursePrice        Float
   courseType         String
   teacherId          String
+
+
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
@@ -206,7 +208,13 @@ model CourseExercises {
 model CourseDetail {
   id                String @id @default(uuid())
   courseId          String @unique
-  courseDescription String
+
+  courseDescription String  @default("")
+  courseImage       String  @default("")
+  courseBanner      String  @default("")
+  warning           String  @default("")
+  needsInfo         String  @default("")
+
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   courses           Courses @relation(fields: courseId, references: id)
@@ -217,7 +225,10 @@ model Exercises {
   id String @id @default(uuid())
 
   exerciseName          String
-  exerciseDescription   String
+  exerciseDescription   String  @default("")
+  exerciseImage         String  @default("")
+  exerciseVideo         String  @default("")
+  exerciseType          String
   teacherId             String 
 
   createdAt             DateTime @default(now())
@@ -236,11 +247,15 @@ model Exercises {
 
 model Todo {
   id        String   @id @default(uuid())
+  todoName  String   @default("")
+  todoDesc  String   @default("")
+  todoImage String   @default("")
+  todoVideo String   @default("")
   sets      Int
   refs      Int
   weight    Float
   total     Int
-  bodyPart String
+  bodyPart  String
   teacherId String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -305,7 +320,6 @@ model CourseSchedule {
   courseId  String
   startTime DateTime
   endTime   DateTime
-  isBooked  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

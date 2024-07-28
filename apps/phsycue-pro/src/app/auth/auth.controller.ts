@@ -66,7 +66,7 @@ export class AuthController {
     @ApiBearerAuth()
     @ApiBody({ type:  ResetPasswordDto })
     @ApiConsumes('application/json')
-    async resetPassword(@Headers('authorization') auth: string, @Body() data: ResetPasswordDto) {
+    async resetPassword(@Headers('Authorization') auth: string, @Body() data: ResetPasswordDto) {
         const token = auth
         const isValid = await this.authService.validateUserToken(token);
         if (!isValid) {
@@ -83,9 +83,9 @@ export class AuthController {
 
     @Post('validateTokenCheck')
     @ApiBearerAuth()
-    async validateTokenCheck(@Headers('authorization') auth: string) {
-        console.log(auth);
-        const token = auth
+    async validateTokenCheck(@Headers('Authorization') auth: string) {
+        // split auth
+        const token = auth.split(' ')[1];
         return this.authService.validateUserToken(token);
     }
  

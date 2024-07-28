@@ -11,6 +11,7 @@ import {
     OtpDto,
     VerifyOtpDto,
 } from './auth.dtos';
+import { json } from 'stream/consumers';
 
 @Injectable()
 export class AuthService {
@@ -194,9 +195,11 @@ export class AuthService {
     }
 
     async validateUserToken(token: string) {
+      const data =JSON.stringify({token: token});
+      console.log(this.configService.get('AUTH_SERVICE_URL') + this.configService.get('AUTH_SERVICE_PREFIX') + '/auth/validateToken',{token: token},);
         const verifyToken = await axios.post(
             this.configService.get('AUTH_SERVICE_URL') + this.configService.get('AUTH_SERVICE_PREFIX') + '/auth/validateToken',
-            {token: token},
+            data,
             {
               headers:{"Content-Type" : "application/json"}
             }
@@ -207,7 +210,7 @@ export class AuthService {
           );
         
         if (verifyToken) {
-            return verifyToken; 
+            return verifyToken.data; 
         }else{
             return {
                 status: false,

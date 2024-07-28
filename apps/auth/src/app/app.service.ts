@@ -120,9 +120,11 @@ export class AuthService {
     }
 
     return {
-      ...tokenAccess,
       code: HttpStatus.OK,
-      data: user,
+      data: {
+        ...tokenAccess,
+        user
+      },
     };
   }
   async sendOtp(optDto: OtpDto): Promise<any> {

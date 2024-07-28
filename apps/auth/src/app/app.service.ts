@@ -302,8 +302,7 @@ export class AuthService {
       success: true,
       type: 'success',
       data: {
-        id: user.id,
-        mobile: user.mobile,
+        ...user,
         refreshToken: tokenRefresh.refreshToken,
         refreshTokenExpiry: tokenRefresh.refreshTokenExpiry,
         accessToken: tokenAccess.accessToken,

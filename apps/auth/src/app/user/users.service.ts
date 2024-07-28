@@ -123,7 +123,9 @@ export class UsersService {
         status: true,
         type: 'success',
         code: HttpStatus.OK,
-        ...user,
+        data: {
+          ...user
+        },
       };
     }
     catch (err) {

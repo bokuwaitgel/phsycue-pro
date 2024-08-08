@@ -9,9 +9,6 @@ export class enrollCourseDto {
     @ApiProperty()
     @IsNotEmpty()
     userId: string
-    @ApiProperty()
-    @IsNotEmpty()
-    scheduleId: string
 }
 
 

@@ -21,11 +21,11 @@ export class SleepController {
   }
 
 
-  @Get('getSleep')
+  @Get('getSleep/:userId')
   @ApiOperation({ summary: 'Get sleep' })
   @ApiResponse({ status: 200, description: 'Data' })
-  public async getSleep(@Param('personalId') personalId: string) {
-    return this.sleepService.getSleepTimes(personalId);
+  public async getSleep(@Param('userId') userId: string) {
+    return this.sleepService.getSleepTimes(userId);
   }
  
 }

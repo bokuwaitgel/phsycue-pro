@@ -14,7 +14,7 @@ export class BodyService {
   async create(body: CreateBodyDto) {
     const personal = await this.prisma.personal.findUnique({
       where: {
-        id: body.personalId
+        userId: body.userId
       }
     });
 
@@ -33,7 +33,7 @@ export class BodyService {
         birthDate: body.birthDate,
         personal: {
           connect: {
-            id: body.personalId
+            id: personal.id
           }
         }
       }
@@ -82,28 +82,41 @@ export class BodyService {
     }
   }
 
-  async getBody(bodyId: string) {
-    const res = await this.prisma.bodyHistory.findUnique({
-      where: {
-        id: bodyId
-      }
-    });
+  async getBody(userId: string) {
+      const personal = await this.prisma.personal.findFirst({
+        where: {
+          userId: userId
+        }
+      });
 
-    if (!res) {
+      if (!personal) {
+        return {
+          status: false,
+          type: 'fail',
+          code: HttpStatus.NOT_FOUND,
+          message: 'Personal not found'
+        };
+      }
+      const res = await this.prisma.bodyHistory.findFirst({
+        where: {
+          personalId: personal.id
+        }
+      });
+  
+      if (!res) {
+        return {
+          status: false,
+          type: 'fail',
+          code: HttpStatus.NOT_FOUND,
+          message: 'Body not found'
+        };
+      }
       return {
-        status: false,
-        type: 'fail',
-        code: HttpStatus.NOT_FOUND,
-        message: 'Body not found'
-      };
-    }
-    return {
-      status: true,
-      type: 'success',
-      message: 'Body found',
-      code : HttpStatus.OK,
-      data: res
-    }
-    
+        status: true,
+        type: 'success',
+        message: 'Body found',
+        code : HttpStatus.OK,
+        data: res
+      }
   }
 }

@@ -14,7 +14,7 @@ export class SleepService {
   async create(createSleepDto: CreateSleepDto) {
     const personal = await this.prisma.personal.findUnique({
       where: {
-        id: createSleepDto.personalId
+        userId: createSleepDto.userId
       }
     });
 
@@ -32,7 +32,7 @@ export class SleepService {
         wakeTime: createSleepDto.wakeTime,
         personal: {
           connect: {
-            id: createSleepDto.personalId
+            id: personal.id
           }
         }
       }
@@ -46,17 +46,38 @@ export class SleepService {
     }
   }
 
-  async getSleepTimes(personalId: string) {
-    const res = await this.prisma.sleepHistory.findMany({
+  async getSleepTimes(userId: string) {
+    const personal = await this.prisma.personal.findUnique({
       where: {
-        personalId: personalId
+        userId: userId
       }
     });
+
+    if (!personal) {
+      return {
+        status: false,
+        type: 'fail',
+        code: HttpStatus.NOT_FOUND,
+        message: 'Personal not found'
+      };
+    }
+
+    const res = await this.prisma.sleepHistory.findMany({
+      where: {
+        personalId: personal.id
+      }
+    });
+    const total_sleep = res.reduce((acc, curr) => acc + curr.wakeTime.getTime() - curr.sleepTime.getTime(), 0);
+    const last_day_sleep = res[res.length - 1] ? res[res.length - 1].wakeTime.getTime() - res[res.length - 1].sleepTime.getTime() : 0;
     return {
       status: true,
       type: 'success',
       code : HttpStatus.OK,
-      data: res
+      data: {
+        total_sleep,
+        last_day_sleep,
+        sleep_history: res
+      }
     }
   }
 }

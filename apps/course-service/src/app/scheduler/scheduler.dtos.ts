@@ -5,10 +5,13 @@ import { IsNotEmpty } from 'class-validator';
 export class CreateSchedulerDto {
     @ApiProperty()
     @IsNotEmpty()
-    startTime: string
+    courseId: string
     @ApiProperty()
     @IsNotEmpty()
-    endTime: string
+    startTime: Date
+    @ApiProperty()
+    @IsNotEmpty()
+    endTime: Date
 }
 
 export class deleteSchedulerDto {

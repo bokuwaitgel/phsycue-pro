@@ -7,10 +7,16 @@ import  config from "./config"
 import { AppController } from './app.controller';
 import { AuthController } from './auth/auth.controller';
 import { UserController } from './user/user.controller';
+import { ContentController } from './content/content.controller';
+import { CourseController } from './course/course.controller';
+import { PersonalController } from './personal/personal.controller';
 
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { UserService } from './user/user.service';
+import { ContentService } from './content/content.service';
+import { CourseService } from './course/course.service';
+import { PersonalService } from './personal/personal.service';
 
 
 
@@ -32,7 +38,7 @@ import { UserService } from './user/user.service';
       },
     ]),
   ],
-  controllers: [AppController, AuthController, UserController],
-  providers: [AppService, AuthService, UserService],
+  controllers: [AppController, AuthController, UserController, ContentController, CourseController, PersonalController],
+  providers: [AppService, AuthService, UserService, ContentService, CourseService, PersonalService],
 })
 export class AppModule {}

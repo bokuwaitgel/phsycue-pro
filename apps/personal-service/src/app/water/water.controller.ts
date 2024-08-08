@@ -20,11 +20,11 @@ export class WaterController {
     return this.waterService.create(data);
   }
 
-  @Get('getWater')
+  @Get('getWater/:userId')
   @ApiOperation({ summary: 'Get water' })
   @ApiResponse({ status: 200, description: 'Data' })
-  public async getWater(@Param('personalId') personalId: string) {
-    return this.waterService.getWaterIntakes(personalId);
+  public async getWater(@Param('userId') userId: string) {
+    return this.waterService.getWaterIntakes(userId);
   }
 
  

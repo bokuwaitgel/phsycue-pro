@@ -17,18 +17,18 @@ export class SchedulerController {
   @Post('createScheduler')
   @ApiOperation({ summary: 'Create scheduler' })
   @ApiResponse({ status: 200, description: 'Data' })
-  public async createScheduler(@Param('courseid') courseid: string ,@Body() data: CreateSchedulerDto) {
-    return this.schedulerService.createScheduler(courseid, data);
+  public async createScheduler( @Body() data: CreateSchedulerDto) {
+    return this.schedulerService.createScheduler(data);
   }
 
-  @Get('getScheduler')
+  @Get('getScheduler/:courseId')
   @ApiOperation({ summary: 'Get scheduler' })
   @ApiResponse({ status: 200, description: 'Data' })
-  getScheduler(@Param('courseid') courseid: string){
-    return this.schedulerService.getScheduler(courseid);
+  getScheduler(@Param('courseId') courseId: string){
+    return this.schedulerService.getScheduler(courseId);
   }
   
-  @Delete('deleteScheduler')
+  @Delete('deleteScheduler/:courseid')
   @ApiOperation({ summary: 'Delete scheduler' })
   @ApiResponse({ status: 200, description: 'Data' })
   public async deleteScheduler( @Param('courseid') courseid: string) {

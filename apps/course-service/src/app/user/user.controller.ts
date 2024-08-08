@@ -21,13 +21,32 @@ export class UserController {
     return this.userService.enrollCourse(data);
   }
 
-  @Get('getUserCourses')
+  @Get('getUserCourses/:userid')
   @ApiOperation({ summary: 'Get user courses' })
   @ApiResponse({ status: 200, description: 'Data' })
   getUserCourses(@Param('userid') userId: string){
     return this.userService.getUserCourses({userId});
   }
 
+  @Get('getCourses')
+  @ApiOperation({ summary: 'Get all courses' })
+  @ApiResponse({ status: 200, description: 'Data' })
+  getCourses(){
+    return this.userService.getCourseActive();
+  }
+
+  @Get('getCourse/:courseid')
+  @ApiOperation({ summary: 'Get course by id' })
+  @ApiResponse({ status: 200, description: 'Data' })
+  getCourse(@Param('courseid') courseId: string){
+    return this.userService.getCourseDetail(courseId);
+  }
 
 
+  @Get('getUserSchedule/:userid')
+  @ApiOperation({ summary: 'Get user schedule' })
+  @ApiResponse({ status: 200, description: 'Data' })
+  getUserSchedule(@Param('userid') userId: string){
+    return this.userService.getUserSchedule({userId});
+  }
 }

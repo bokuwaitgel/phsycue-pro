@@ -7,7 +7,6 @@ import {
   UpdateCourseDto,
   deleteCourseDto,
   getCourseByIdDto,
-  AddExerciseToCourseDto,
   CreateCourseDetailDto,
   UpdateCourseDetailDto,
   deleteCourseDetailDto,
@@ -20,31 +19,53 @@ export class CourseService {
   constructor(private prisma: PrismaService) {}
 
   async createCourse(data: CreateCourseDto) : Promise<unknown> {
-    const res = await this.prisma.courses.create({
-      data: {
-        img: data.img,
-        courseName: data.name,
-        courseDescription: data.description,
-        coursePrice: data.price,
-        courseType: data.type,
-        teacher: {
-          connect: {
-            id: data.teacherId
+    try{
+
+      const res = await this.prisma.courses.create({
+        data: {
+          title: data.title,
+          description: data.description,
+          price: data.price,
+          type: data.type,
+          image: data.image,
+          teacher: {
+            connect: {
+              id: data.teacherId
+            }
           }
         }
+      });
+      if(!res){
+        return {
+          status: false,
+          type: 'error',
+          message: 'Course not created',
+          code : HttpStatus.BAD_REQUEST,
+        }
       }
-    });
-    return {
-      status: true,
-      type: 'success',
-      message: 'Course created',
-      code : HttpStatus.OK,
-      data: res
+      return {
+        status: true,
+        type: 'success',
+        message: 'Course created',
+        code : HttpStatus.OK,
+        data: res
+      }
+    }catch(e){
+      return {
+        status: false,
+        type: 'error',
+        message: e.message,
+        code : HttpStatus.BAD_REQUEST,
+      }
     }
   }
 
-  async getCourses() : Promise<unknown> {
-    const res = await this.prisma.courses.findMany();
+  async getCourses(teacherId: string) : Promise<unknown> {
+    const res = await this.prisma.courses.findMany({
+      where: {
+        teacherId: teacherId
+      }
+    });
     return {
       status: true,
       type: 'success',
@@ -89,11 +110,11 @@ export class CourseService {
         id: data.id
       },
       data: {
-        img: data.img,
-        courseName: data.name,
-        courseDescription: data.description,
-        coursePrice: data.price,
-        courseType: data.type,
+        title: data.title,
+        description: data.description,
+        price: data.price,
+        type: data.type,
+        image: data.image,
       }
     });
     return {
@@ -136,58 +157,6 @@ export class CourseService {
     }
   }
 
-  async addCourseToExercise(data: AddExerciseToCourseDto) : Promise<unknown> {
-    const find_exercise = await this.prisma.exercises.findUnique({
-      where: {
-        id: data.exerciseId
-      }
-    });
-
-    const find_course = await this.prisma.courses.findUnique({
-      where: {
-        id: data.courseId
-      }
-    });
-
-    if(!find_exercise) {
-      return {
-        status: false,
-        type: 'failed',
-        message: 'Exercise not found',
-        code : HttpStatus.NOT_FOUND,
-      }
-    }
-    if(!find_course) {
-      return {
-        status: false,
-        type: 'failed',
-        message: 'Course not found',
-        code : HttpStatus.NOT_FOUND,
-      }
-    }
-
-    const res = await this.prisma.courseExercises.create({
-      data: {
-        courses: {
-          connect: {
-            id: data.courseId
-          }
-        },
-        exercises: {
-          connect: {
-            id: data.exerciseId
-          }
-        }
-      }
-    });
-    return {
-      status: true,
-      type: 'success',
-      message: 'Course added to exercise',
-      code : HttpStatus.OK,
-      data: res
-    }
-  }
 
   async createCourseDetail(data: CreateCourseDetailDto) : Promise<unknown> {
     const res = await this.prisma.courseDetail.create({
@@ -197,7 +166,11 @@ export class CourseService {
             id: data.courseId
           }
         },
-        courseDescription: data.courseDescription,
+        title: data.title,
+        detail: data.detail,
+        image: data.image,
+        warning: data.warning,
+        needsInfo: data.needsInfo
       }
     });
     return {
@@ -255,7 +228,16 @@ export class CourseService {
         id: data.id
       },
       data: {
-        courseDescription: data.courseDescription,
+        title: data.title,
+        detail: data.detail,
+        image: data.image,
+        warning: data.warning,
+        needsInfo: data.needsInfo,
+        courses: {
+          connect: {
+            id: data.courseId
+          }
+        }
       }
     });
     return {

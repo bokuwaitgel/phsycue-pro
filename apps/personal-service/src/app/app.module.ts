@@ -10,12 +10,14 @@ import { BodyController } from './body/body.controller';
 import { FoodController } from './food/food.controller';
 import { WaterController } from './water/water.controller';
 import { SleepController } from './sleep/sleep.controller';
+import { TrackerController } from './tracker/tracker.controller';
 
 import { AppService } from './app.service';
 import { BodyService } from './body/body.service';
 import { FoodService } from './food/food.service';
 import { WaterService } from './water/water.service';
 import { SleepService } from './sleep/sleep.service';
+import { TrackerService } from './tracker/tracker.service';
 
 @Module({
   imports: [
@@ -26,7 +28,7 @@ import { SleepService } from './sleep/sleep.service';
     }),
     ScheduleModule.forRoot()
   ],
-  controllers: [AppController, BodyController, FoodController, WaterController, SleepController],
-  providers: [AppService, BodyService, FoodService, WaterService, SleepService, PrismaService],
+  controllers: [AppController, BodyController, FoodController, WaterController, SleepController, TrackerController],
+  providers: [AppService, BodyService, FoodService, WaterService, SleepService, TrackerService, PrismaService],
 })
 export class AppModule {}

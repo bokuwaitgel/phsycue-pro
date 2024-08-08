@@ -8,7 +8,6 @@ import {
   CreateCourseDto,
   UpdateCourseDto,
   deleteCourseDto,
-  AddExerciseToCourseDto,
   CreateCourseDetailDto,
   UpdateCourseDetailDto,
   deleteCourseDetailDto,
@@ -19,21 +18,21 @@ import {
 export class CourseController {
   constructor(private readonly courseService: CourseService) {}
 
-  @Get('getCourses')
+  @Get('getCourses/:teacherId')
   @ApiOperation({ summary: 'Get all courses' })
   @ApiResponse({ status: 200, description: 'Data' })
-  getCourses() {
-    return this.courseService.getCourses();
+  getCourses(@Param('teacherId') teacherId: string){
+    return this.courseService.getCourses(teacherId);
   }
 
-  @Get('getCourseById')
+  @Get('getCourseById/:courseid')
   @ApiOperation({ summary: 'Get course by id' })
   @ApiResponse({ status: 200, description: 'Data' })
   getCourseById(@Param('courseid') courseid: string){ 
     return this.courseService.getCourseById({id: courseid});
   }
 
-  @Post('createCourse')
+  @Post('createCourse/:teacherId')
   @ApiOperation({ summary: 'Create course' })
   @ApiResponse({ status: 200, description: 'Data' })
   public async createCourse(@Body() data: CreateCourseDto) {
@@ -54,13 +53,6 @@ export class CourseController {
     return this.courseService.deleteCourse(data);
   }
 
-  @Post('addExerciseToCourse')
-  @ApiOperation({ summary: 'Add exercise to course' })
-  @ApiResponse({ status: 200, description: 'Data' })
-  public async addExerciseToCourse(@Body() data: AddExerciseToCourseDto) {
-    return this.courseService.addCourseToExercise(data);
-  }
-
   @Get('getCourseDetails')
   @ApiOperation({ summary: 'Get all course details' })
   @ApiResponse({ status: 200, description: 'Data' })
@@ -68,7 +60,7 @@ export class CourseController {
     return this.courseService.getCourseDetails();
   }
 
-  @Get('getCourseDetailById')
+  @Get('getCourseDetailById/:coursedetailid')
   @ApiOperation({ summary: 'Get course detail by id' })
   @ApiResponse({ status: 200, description: 'Data' })
   getCourseDetailById(@Param('coursedetailid') coursedetailid: string){

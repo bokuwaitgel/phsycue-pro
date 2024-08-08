@@ -8,5 +8,5 @@ export class CreateWaterDto {
   waterIntake: number;
   @ApiProperty()
   @IsNotEmpty()
-  personalId: string;
+  userId: string;
 }

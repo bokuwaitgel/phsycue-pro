@@ -1,14 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
-export class CreateSleepDto {
+
+export class StartTrackerDto {
   @ApiProperty()
   @IsNotEmpty()
-  sleepTime: Date;
+  UserId: string;
+
   @ApiProperty()
   @IsNotEmpty()
-  wakeTime: Date;
+  courseId: string;
+}
+
+export class EndTrackerDto {
   @ApiProperty()
   @IsNotEmpty()
-  userId: string;
+  id: string;
 }

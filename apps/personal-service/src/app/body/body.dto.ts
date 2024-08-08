@@ -14,7 +14,7 @@ export class CreateBodyDto {
   birthDate: Date;
   @ApiProperty()
   @IsNotEmpty()
-  personalId: string;
+  userId: string;
 }
 
 export class UpdateBodyDto {

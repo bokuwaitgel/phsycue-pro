@@ -14,7 +14,7 @@ export class WaterService {
   async create(createWaterDto: CreateWaterDto) {
     const personal = await this.prisma.personal.findUnique({
       where: {
-        id: createWaterDto.personalId
+        userId: createWaterDto.userId
       }
     });
 
@@ -31,7 +31,7 @@ export class WaterService {
         waterIntake: createWaterDto.waterIntake,
         personal: {
           connect: {
-            id: createWaterDto.personalId
+            id: personal.id
           }
         }
       }
@@ -45,17 +45,28 @@ export class WaterService {
     }
   }
 
-  async getWaterIntakes(personalId: string) {
-    const res = await this.prisma.waterHistory.findMany({
+  async getWaterIntakes(userId: string) {
+    const personal = await this.prisma.personal.findUnique({
       where: {
-        personalId: personalId
+        userId: userId
       }
     });
+    const res = await this.prisma.waterHistory.findMany({
+      where: {
+        personalId: personal.id
+      }
+    });
+   const total_water = res.reduce((acc, curr) => acc + curr.waterIntake, 0);
+
+
     return {
       status: true,
       type: 'success',
       code : HttpStatus.OK,
-      data: res
+      data: {
+        total_water,
+        waterIntakes: res
+      }
     }
   }
 

@@ -4,10 +4,7 @@ import { IsNotEmpty } from 'class-validator';
 export class CreateCourseDto {
   @IsNotEmpty()
   @ApiProperty()
-  img: string;
-  @IsNotEmpty()
-  @ApiProperty()
-  name: string;
+  title: string;
   @IsNotEmpty()
   @ApiProperty()
   description: string;
@@ -17,6 +14,9 @@ export class CreateCourseDto {
   @IsNotEmpty()
   @ApiProperty()
   type: string;
+  @IsNotEmpty()
+  @ApiProperty()
+  image: string;
   @IsNotEmpty()
   @ApiProperty()
   teacherId: string;
@@ -29,10 +29,7 @@ export class UpdateCourseDto {
   id: string;
   @IsNotEmpty()
   @ApiProperty()
-  img: string;
-  @IsNotEmpty()
-  @ApiProperty()
-  name: string;
+  title: string;
   @IsNotEmpty()
   @ApiProperty()
   description: string;
@@ -42,6 +39,12 @@ export class UpdateCourseDto {
   @IsNotEmpty()
   @ApiProperty()
   type: string;
+  @IsNotEmpty()
+  @ApiProperty()
+  image: string;
+  @IsNotEmpty()
+  @ApiProperty()
+  teacherId: string;
 }
 
 export class deleteCourseDto {
@@ -57,23 +60,28 @@ export class getCourseByIdDto {
   id: string;
 }
 
-
-export class AddExerciseToCourseDto {
-  @IsNotEmpty()
-  @ApiProperty()
-  exerciseId: string;
-  @IsNotEmpty()
-  @ApiProperty()
-  courseId: string;
-}
-
 export class CreateCourseDetailDto {
   @IsNotEmpty()
   @ApiProperty()
   courseId: string;
   @IsNotEmpty()
-  @ApiProperty()  
-  courseDescription: string;
+  @ApiProperty()
+  title: string;
+  @IsNotEmpty()
+  @ApiProperty()
+  detail: string;
+  @IsNotEmpty()
+  @ApiProperty()
+  image: string;
+  @IsNotEmpty()
+  @ApiProperty()
+  warning: string;
+  @IsNotEmpty()
+  @ApiProperty()
+  needsInfo: string;
+  @IsNotEmpty()
+  @ApiProperty()
+  teacherId: string;
 }
 
 export class UpdateCourseDetailDto {
@@ -85,7 +93,22 @@ export class UpdateCourseDetailDto {
   courseId: string;
   @IsNotEmpty()
   @ApiProperty()
-  courseDescription: string;
+  title: string;
+  @IsNotEmpty()
+  @ApiProperty()
+  detail: string;
+  @IsNotEmpty()
+  @ApiProperty()
+  image: string;
+  @IsNotEmpty()
+  @ApiProperty()
+  warning: string;
+  @IsNotEmpty()
+  @ApiProperty()
+  needsInfo: string;
+  @IsNotEmpty()
+  @ApiProperty()
+  teacherId: string;
 }
 
 export class deleteCourseDetailDto {

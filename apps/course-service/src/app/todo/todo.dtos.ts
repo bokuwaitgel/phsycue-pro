@@ -4,19 +4,31 @@ import { IsNotEmpty } from 'class-validator';
 export class CreateTodoDto {
     @IsNotEmpty()
     @ApiProperty()
-    refs: string;
+    title: string;
     @IsNotEmpty()
     @ApiProperty()
-    sets: string;
+    description: string;
+    // @IsNotEmpty()
+    @ApiProperty()
+    image: string;
+    // @IsNotEmpty()
+    @ApiProperty()
+    video: string;
     @IsNotEmpty()
     @ApiProperty()
-    weights: string;
+    refs: number;
+    @IsNotEmpty()
+    @ApiProperty()
+    sets: number;
+    @IsNotEmpty()
+    @ApiProperty()
+    weights: number;
     @IsNotEmpty()
     @ApiProperty()
     body_parts: string;
     @IsNotEmpty()
     @ApiProperty()
-    total: string;
+    total: number;
     @IsNotEmpty()
     @ApiProperty()
     teacherId: string;
@@ -26,22 +38,34 @@ export class CreateTodoDto {
 export class UpdateTodoDto {
     @IsNotEmpty()
     @ApiProperty()
+    title: string;
+    @IsNotEmpty()
+    @ApiProperty()
+    description: string;
+    // @IsNotEmpty()
+    @ApiProperty()
+    image: string;
+    // @IsNotEmpty()
+    @ApiProperty()
+    video: string;
+    @IsNotEmpty()
+    @ApiProperty()
     id: string;
     @IsNotEmpty()
     @ApiProperty()
-    refs: string;
+    refs: number;
     @IsNotEmpty()
     @ApiProperty()
-    sets: string;
+    sets: number;
     @IsNotEmpty()
     @ApiProperty()
-    weights: string;
+    weights: number;
     @IsNotEmpty()
     @ApiProperty()
     body_parts: string;
     @IsNotEmpty()
     @ApiProperty()
-    total: string;
+    total: number;
 }
 
 export class deleteTodoDto {

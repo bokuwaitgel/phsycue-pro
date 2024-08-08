@@ -16,13 +16,18 @@ export class TodoService {
   constructor(private prisma: PrismaService) {}
 
   async createTodo(data: CreateTodoDto) : Promise<unknown> {
+    try{
     const res = await this.prisma.todo.create({
       data: {
-        sets: parseInt(data.sets),
-        refs: parseInt(data.refs),
-        weight: parseFloat(data.weights),
+        title: data.title,
+        description: data.description,
+        image: data.image,
+        video: data.video,
+        sets: data.sets,
+        refs: data.refs,
+        weight: data.weights,
         bodyPart: data.body_parts,
-        total: parseInt(data.total),
+        total: data.total,
         teacher: {
           connect: {
             id: data.teacherId
@@ -30,6 +35,14 @@ export class TodoService {
         }
       }
     });
+    if(!res){
+      return {
+        status: false,
+        type: 'error',
+        message: 'Todo not created',
+        code : HttpStatus.BAD_REQUEST,
+      }
+    }
     return {
       status: true,
       type: 'success',
@@ -37,11 +50,25 @@ export class TodoService {
       code : HttpStatus.OK,
       data: res
     }
+    }catch(e){
+      return {
+        status: false,
+        type: 'error',
+        message: e.message,
+        code : HttpStatus.BAD_REQUEST,
+      }
+    }
   }
 
-  async getTodos() : Promise<unknown> {
-    const res = await this.prisma.todo.findMany();
-    console.log(res);
+  async getTodos(teacherId: string) : Promise<unknown> {
+    const res = await this.prisma.todo.findMany(
+      {
+        where: {
+          teacherId: teacherId
+        }
+      }
+    );
+    
     return {
       status: true,
       type: 'success',
@@ -80,11 +107,15 @@ export class TodoService {
           id: data.id
         },
         data: {
-          sets: parseInt(data.sets),
-          refs: parseInt(data.refs),
-          weight: parseFloat(data.weights),
+          title: data.title,
+          description: data.description,
+          image: data.image,
+          video: data.video,
+          sets: data.sets,
+          refs: data.refs,
+          weight: data.weights,
           bodyPart: data.body_parts,
-          total: parseInt(data.total)
+          total: data.total
         }
       });
       return {
@@ -169,22 +200,37 @@ export class TodoService {
         code : HttpStatus.NOT_FOUND,
       }
     }
-
-    const res = await this.prisma.exercisesTodo.create({
-      data: {
-        todos: {
-          connect: {
-            id: data.todoId
-          }
-        },
-        exercises: {
-          connect: {
-            id: data.exerciseId
-          }
-        },
+    try{
+      const res = await this.prisma.exercisesTodo.create({
+        data: {
+          todos: {
+            connect: {
+              id: data.todoId
+            }
+          },
+          exercises: {
+            connect: {
+              id: data.exerciseId
+            }
+          },
+        }
+      });
+      
+      return {
+        status: true,
+        type: 'success',
+        message: 'Todo added to exercise',
+        code : HttpStatus.OK,
+        data: res
       }
-    });
-    
-    return res;
+    }
+    catch(e){
+      return {
+        status: false,
+        type: 'error',
+        message: e.message,
+        code : HttpStatus.BAD_REQUEST,
+      }
+    }
   }
 }

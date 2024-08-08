@@ -16,14 +16,14 @@ import {
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
-  @Get('getTodos')
+  @Get('getTodos/:teacherId')
   @ApiOperation({ summary: 'Get all todos' })
   @ApiResponse({ status: 200, description: 'Data' })
-  getTodos() {
-    return this.todoService.getTodos();
+  getTodos(@Param('teacherId') teacherId: string){
+    return this.todoService.getTodos(teacherId);
   }
 
-  @Get('getTodoById')
+  @Get('getTodoById/:todoid')
   @ApiOperation({ summary: 'Get todo by id' })
   @ApiResponse({ status: 200, description: 'Data' })
   getTodoById(@Param('todoid') todoid: string){

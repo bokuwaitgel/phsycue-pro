@@ -6,7 +6,8 @@ import {
   CreateExerciseDto,
   UpdateExerciseDto,
   deleteExerciseDto,
-  getExerciseByIdDto
+  getExerciseByIdDto,
+  addExerciseToCourseDto
 } from './exercise.dto';
 
 @Injectable()
@@ -15,28 +16,54 @@ export class ExerciseService {
   constructor(private prisma: PrismaService) {}
 
   async createExercise(data: CreateExerciseDto) : Promise<unknown> {
-    const res = await this.prisma.exercises.create({
-      data: {
-        exerciseName: data.name,
-        exerciseDescription: data.description,
-        teacher: {
-          connect: {
-            id: data.teacherId
+    try{
+      const res = await this.prisma.exercises.create({
+        data: {
+          name: data.name,
+          description: data.description,
+          image: data.image,
+          video: data.video,
+          type: data.type,
+          teacher: {
+            connect: {
+              id: data.teacherId
+            }
           }
         }
+      });
+      if(!res){
+        return {
+          status: false,
+          type: 'error',
+          message: 'Exercise not created',
+          code : HttpStatus.BAD_REQUEST,
+        }
       }
-    });
-    return {
-      status: true,
-      type: 'success',
-      message: 'Exercise created',
-      code : HttpStatus.OK,
-      data: res
+      return {
+        status: true,
+        type: 'success',
+        message: 'Exercise created',
+        code : HttpStatus.OK,
+        data: res
+      }
+    }catch(e){
+      return {
+        status: false,
+        type: 'error',
+        message: e.message,
+        code : HttpStatus.BAD_REQUEST,
+      }
     }
   }
 
-  async getExercises() : Promise<unknown> {
-    const res = await this.prisma.exercises.findMany();
+  async getExercises(teacherId: string) : Promise<unknown> {
+    const res = await this.prisma.exercises.findMany(
+      {
+        where: {
+          teacherId: teacherId
+        }
+      }
+    );
     return {
       status: true,
       type: 'success',
@@ -81,8 +108,11 @@ export class ExerciseService {
         id: data.id
       },
       data: {
-        exerciseName: data.name,
-        exerciseDescription: data.description
+        name: data.name,
+        description: data.description,
+        image: data.image,
+        video: data.video,
+        type: data.type
       }
     });
     return {
@@ -119,6 +149,52 @@ export class ExerciseService {
       message: 'Exercise deleted',
       code : HttpStatus.OK,
       data: res
+    }
+  }
+
+  async addExerciseToCourse(data: addExerciseToCourseDto) : Promise<unknown> {
+    const find = await this.prisma.courses.findUnique({
+      where: {
+        id: data.courseId
+      }
+    });
+    if(!find) {
+      return {
+        status: false,
+        type: 'failed',
+        message: 'Course not found',
+        code : HttpStatus.NOT_FOUND,
+      }
+    }
+    try{
+      const res = await this.prisma.courseExercises.create({
+        data: {
+          courses: {
+            connect: {
+              id: data.courseId
+            }
+          },
+          exercises: {
+            connect: {
+              id: data.exerciseId
+            }
+          }
+        }
+      });
+      return {
+        status: true,
+        type: 'success',
+        message: 'Exercise added to course',
+        code : HttpStatus.OK,
+        data: res
+      }
+    }catch(e){
+      return {
+        status: false,
+        type: 'error',
+        message: e.message,
+        code : HttpStatus.BAD_REQUEST,
+      }
     }
   }
 }

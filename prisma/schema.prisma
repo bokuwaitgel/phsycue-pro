@@ -41,10 +41,15 @@ model Otp {
 }
 
 model Teacher {
-  id        String   @id @default(uuid())
-  userId    String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(uuid())
+  userId      String
+  name        String   @default("")
+  email       String   @default("")
+  mobile      String   @default("")
+  image       String   @default("")
+  description String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   user              User               @relation(fields: [userId], references: [id])
   courseEnrollments CourseEnrollment[]
@@ -66,6 +71,7 @@ model Personal {
   sleepHistories    SleepHistory[]
   waterHistories    WaterHistory[]
   caloriesHistories CaloriesHistory[]
+  trackerHistories  Tracker[]
   
   user              User @relation(fields: [userId], references: [id])
 }
@@ -112,6 +118,7 @@ model WaterHistory {
 model CaloriesHistory {
   id              String   @id @default(uuid())
   personalId      String
+  name            String
   caloriesIntake  Float
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -154,26 +161,34 @@ model MealRecipe {
   @@index([recipeId])
 }
 
-model Tracking {
+model Tracker {
   id         String   @id @default(uuid())
-  userId     String
-  mealId     String
-  recipeId   String
-  waterId    String
-  caloriesId String
-  sleepId    String
-  bodyId     String
+  personalId     String
+  courseId     String
+  startTime  DateTime @default(now())
+  endTime    DateTime @default(now())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  personal   Personal @relation(fields: [personalId], references: [id])
+  course     Courses @relation(fields: [courseId], references: [id])
+
+
+  @@index([personalId])
+  @@index([courseId])
 }
 
 model Courses {
   id                 String   @id @default(uuid())
-  courseImage                String
-  courseName         String
-  courseDescription  String
-  coursePrice        Float
-  courseType         String
+
+  title              String
+  description        String
+  price              Float
+  type               String
+  image              String
+  isActive           Boolean @default(true)
+  status             String  @default("active")
+
   teacherId          String
 
 
@@ -189,14 +204,15 @@ model Courses {
   CourseSchedule CourseSchedule[]
 
   @@index([teacherId])
+  Tracker Tracker[]
 }
 
 model CourseExercises {
-  id        String   @id @default(uuid())
-  courseId  String
-  exerciseId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(uuid())
+  courseId    String
+  exerciseId  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   courses   Courses   @relation(fields: [courseId], references: [id])
   exercises Exercises @relation(fields: [exerciseId], references: [id])
@@ -209,9 +225,9 @@ model CourseDetail {
   id                String @id @default(uuid())
   courseId          String @unique
 
-  courseDescription String  @default("")
-  courseImage       String  @default("")
-  courseBanner      String  @default("")
+  title             String  @default("")
+  detail            String  @default("")
+  image             String  @default("")
   warning           String  @default("")
   needsInfo         String  @default("")
 
@@ -224,11 +240,12 @@ model CourseDetail {
 model Exercises {
   id String @id @default(uuid())
 
-  exerciseName          String
-  exerciseDescription   String  @default("")
-  exerciseImage         String  @default("")
-  exerciseVideo         String  @default("")
-  exerciseType          String
+  name                  String
+  description           String  @default("")
+  image                 String  @default("")
+  video                 String  @default("")
+  type                  String
+
   teacherId             String 
 
   createdAt             DateTime @default(now())
@@ -246,19 +263,19 @@ model Exercises {
 }
 
 model Todo {
-  id        String   @id @default(uuid())
-  todoName  String   @default("")
-  todoDesc  String   @default("")
-  todoImage String   @default("")
-  todoVideo String   @default("")
-  sets      Int
-  refs      Int
-  weight    Float
-  total     Int
-  bodyPart  String
-  teacherId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String   @id @default(uuid())
+  title         String   @default("")
+  description   String   @default("")
+  image         String   @default("")
+  video         String   @default("")
+  sets          Int
+  refs          Int
+  weight        Float
+  total         Int
+  bodyPart      String
+  teacherId     String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   teacher Teacher @relation(fields: [teacherId], references: [id])
 
@@ -304,15 +321,12 @@ model CourseEnrollment {
   teacherId        String
   course           Courses        @relation(fields: [courseId], references: [id])
   courseId         String
-  courseSchedule   CourseSchedule @relation(fields: [courseScheduleId], references: [id])
-  courseScheduleId String
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
 
   @@index([userId])
   @@index([teacherId])
   @@index([courseId])
-  @@index([courseScheduleId])
 }
 
 model CourseSchedule {
@@ -324,16 +338,26 @@ model CourseSchedule {
   updatedAt DateTime @updatedAt
 
   course    Courses  @relation(fields: [courseId], references: [id])
-
-  courseEnrollment CourseEnrollment[]
   @@index([courseId])
 }
 
 //survey thing
 model survey {
-  id                 String   @id @default(uuid())
-  surveyName        String
-  surveyDescription String
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  id                  String   @id @default(uuid())
+  surveyName          String
+  surveyDescription   String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+
+model banner {
+  id                  String   @id @default(uuid())
+  name                String
+  description         String
+  imageURL            String
+  type                String
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }

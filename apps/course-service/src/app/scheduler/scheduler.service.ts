@@ -13,10 +13,11 @@ export class SchedulerService {
   
   constructor(private prisma: PrismaService) {}
 
-  async createScheduler(courseid,  data: CreateSchedulerDto) {
+  async createScheduler(data: CreateSchedulerDto) {
     try {
+      console.log('courseid', data.courseId);
       const findCourse = await this.prisma.courses.findUnique({
-        where: { id: courseid }
+        where: { id: data.courseId }
       });
       if (!findCourse) {
         return {
@@ -26,10 +27,11 @@ export class SchedulerService {
       }
       const scheduler = await this.prisma.courseSchedule.create({
         data: {
-          ...data,
+          startTime: data.startTime,
+          endTime: data.endTime,
           course: {
             connect: {
-              id: courseid
+              id: data.courseId
             }
           }
         }

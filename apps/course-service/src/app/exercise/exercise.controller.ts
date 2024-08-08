@@ -8,6 +8,7 @@ import {
   CreateExerciseDto,
   UpdateExerciseDto,
   deleteExerciseDto,
+  addExerciseToCourseDto
 } from './exercise.dto';
 
 @ApiTags('exercise')
@@ -15,14 +16,14 @@ import {
 export class ExerciseController {
   constructor(private readonly exerciseService: ExerciseService) {}
 
-  @Get('getExercises')
+  @Get('getExercises/:teacherId')
   @ApiOperation({ summary: 'Get all exercises' })
   @ApiResponse({ status: 200, description: 'Data' })
-  getExercises() {
-    return this.exerciseService.getExercises();
+  getExercises(@Param('teacherId') teacherId: string){
+    return this.exerciseService.getExercises(teacherId);
   }
 
-  @Get('getExerciseById')
+  @Get('getExerciseById/:exerciseid')
   @ApiOperation({ summary: 'Get exercise by id' })
   @ApiResponse({ status: 200, description: 'Data' })
   getExerciseById(@Param('exerciseid') exerciseid: string){
@@ -49,4 +50,12 @@ export class ExerciseController {
   public async deleteExercise( @Body() data: deleteExerciseDto) {
     return this.exerciseService.deleteExercise(data);
   }
+
+  @Post('addExerciseToCourse')
+  @ApiOperation({ summary: 'Add todo to exercise' })
+  @ApiResponse({ status: 200, description: 'Data' })
+  public async addExerciseToCourse(@Body() data: addExerciseToCourseDto) {
+    return this.exerciseService.addExerciseToCourse(data);
+  }
+
 }

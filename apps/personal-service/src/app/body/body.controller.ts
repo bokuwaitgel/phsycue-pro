@@ -21,11 +21,11 @@ export class BodyController {
     return this.bodyService.create(data);
   }
 
-  @Get('getBody')
+  @Get('getBody/:userId')
   @ApiOperation({ summary: 'Get body' })
   @ApiResponse({ status: 200, description: 'Data' })
-  public async getBody(@Param('id') id: string) {
-    return this.bodyService.getBody(id);
+  public async getBody(@Param('userId') userId: string) {
+    return this.bodyService.getBody(userId);
   }
 
 

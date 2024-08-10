@@ -76,7 +76,10 @@ export class AuthController {
                 code: 401,
                 message: 'Invalid Token',
               };
-        }else{
+        } else if (isValid.success !== 'true') {
+            return isValid;
+        }
+        else{
             return this.authService.resetPassword(data);
         }
     }

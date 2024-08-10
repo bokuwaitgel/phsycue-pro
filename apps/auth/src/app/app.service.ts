@@ -362,7 +362,8 @@ export class AuthService {
 
   async verifyToken(data: verifyTokenDto): Promise<any> {
     try {
-      const decoded = this.jwtService.verify(data.token) as { mobile: string};
+      const token = data.token.split(' ')[1];
+      const decoded = this.jwtService.verify(token) as { mobile: string};
       const user = await this.usersService.findByLogin(decoded.mobile);
       if (!user) {
         return {
@@ -377,6 +378,7 @@ export class AuthService {
         success: 'true',
         type: 'success',
         message: 'valid token',
+        data: user,
       };
     } catch (err) {
       return {

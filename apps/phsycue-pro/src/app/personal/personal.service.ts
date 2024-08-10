@@ -33,7 +33,10 @@ export class PersonalService {
         });
         return res.data;
     }
-    async createWater(data: CreateWaterDto)
+    async createWater(data: {
+        userId: string;
+        waterIntake: number;
+    })
     {
         const url = `${this.configService.get('PERSONAL_SERVICE_URL')}${this.configService.get('PERSONAL_SERVICE_PREFIX')}/water/createWater`
 
@@ -49,7 +52,12 @@ export class PersonalService {
         return res.data;
     }
 
-    async createBody(data: CreateBodyDto)
+    async createBody(data: {
+        userId: string;
+        weight: number;
+        height: number;
+        birthDate: Date;
+    })
     {
         const url = `${this.configService.get('PERSONAL_SERVICE_URL')}${this.configService.get('PERSONAL_SERVICE_PREFIX')}/body/createBody`
 
@@ -67,7 +75,11 @@ export class PersonalService {
         return res.data;
     }
 
-    async createFood(data: CreateFoodDto)
+    async createFood(data: {
+        userId: string;
+        name: string;
+        calories: number;
+    })
     {
         const url = `${this.configService.get('PERSONAL_SERVICE_URL')}${this.configService.get('PERSONAL_SERVICE_PREFIX')}/food/createFood`
 
@@ -84,7 +96,11 @@ export class PersonalService {
         return res.data;
     }
 
-    async createSleep(data: CreateSleepDto)
+    async createSleep(data: {
+        userId: string;
+        sleepTime: Date;
+        wakeTime: Date;
+    })
     {
         const url = `${this.configService.get('PERSONAL_SERVICE_URL')}${this.configService.get('PERSONAL_SERVICE_PREFIX')}/sleep/createSleep`
 
@@ -101,7 +117,7 @@ export class PersonalService {
         return res.data;
     }
 
-    async startTracker(data: StartTrackerDto)
+    async startTracker(data: {UserId: string, courseId: string})
     {
         const url = `${this.configService.get('PERSONAL_SERVICE_URL')}${this.configService.get('PERSONAL_SERVICE_PREFIX')}/tracker/start`
 

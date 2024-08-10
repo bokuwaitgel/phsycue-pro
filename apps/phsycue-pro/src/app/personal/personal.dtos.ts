@@ -5,9 +5,6 @@ export class CreateWaterDto {
     @ApiProperty()
     @IsNotEmpty()
     waterIntake: number;
-    @ApiProperty()
-    @IsNotEmpty()
-    userId: string;
   }
 
 export class CreateFoodDto {
@@ -17,9 +14,7 @@ export class CreateFoodDto {
     @ApiProperty()
     @IsNotEmpty()
     calories: number;
-    @ApiProperty()
-    @IsNotEmpty()
-    userId: string;
+
   }
 
   export class CreateSleepDto {
@@ -29,16 +24,9 @@ export class CreateFoodDto {
     @ApiProperty()
     @IsNotEmpty()
     wakeTime: Date;
-    @ApiProperty()
-    @IsNotEmpty()
-    userId: string;
   }
   
-  export class StartTrackerDto {
-    @ApiProperty()
-    @IsNotEmpty()
-    UserId: string;
-  
+  export class StartTrackerDto {  
     @ApiProperty()
     @IsNotEmpty()
     courseId: string;
@@ -60,9 +48,6 @@ export class CreateFoodDto {
     @ApiProperty()
     @IsNotEmpty()
     birthDate: Date;
-    @ApiProperty()
-    @IsNotEmpty()
-    userId: string;
   }
   
   export class UpdateBodyDto {

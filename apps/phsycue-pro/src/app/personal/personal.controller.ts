@@ -22,9 +22,9 @@ export class PersonalController {
         private readonly authService: AuthService,
         private readonly contentService: PersonalService
     ) { }
-    @Get('getPersonal/:userId')
+    @Get('getPersonal')
     @ApiBearerAuth()
-    async getPersonal(@Param('userId') userId: string, @Headers('Authorization') auth: string){
+    async getPersonal(@Headers('Authorization') auth: string){
         const token = auth
         const isValid = await this.authService.validateUserToken(token);
         if (!isValid) {
@@ -34,8 +34,10 @@ export class PersonalController {
                 code: 401,
                 message: 'Invalid Token',
             };
+        }else if (isValid.success !== 'true') {
+            return isValid;
         }
-        return this.contentService.getPersonal(userId);
+        return this.contentService.getPersonal(isValid.data.id);
     }
     
 
@@ -52,8 +54,15 @@ export class PersonalController {
                 code: 401,
                 message: 'Invalid Token',
             };
+        }else if (isValid.success !== 'true') {
+            return isValid;
         }
-        return this.contentService.createBody(data);
+        return this.contentService.createBody({
+            weight: data.weight,
+            height: data.height,
+            birthDate: data.birthDate,
+            userId: isValid.data.id,
+        });
     }
 
 
@@ -70,8 +79,14 @@ export class PersonalController {
                 code: 401,
                 message: 'Invalid Token',
             };
+        }else if (isValid.success !== 'true') {
+            return isValid;
         }
-        return this.contentService.createFood(data);
+        return this.contentService.createFood({
+            name: data.name,
+            calories: data.calories,
+            userId: isValid.data.id,
+        });
     }
 
     @Post('createSleep')
@@ -87,8 +102,14 @@ export class PersonalController {
                 code: 401,
                 message: 'Invalid Token',
             };
+        }else if (isValid.success !== 'true') {
+            return isValid;
         }
-        return this.contentService.createSleep(data);
+        return this.contentService.createSleep({
+            sleepTime: data.sleepTime,
+            wakeTime: data.wakeTime,
+            userId: isValid.data.id,
+        });
     }
 
     @Post('createWater')
@@ -104,8 +125,13 @@ export class PersonalController {
                 code: 401,
                 message: 'Invalid Token',
             };
+        }else if (isValid.success !== 'true') {
+            return isValid;
         }
-        return this.contentService.createWater(data);
+        return this.contentService.createWater({
+            userId: isValid.data.id,
+            waterIntake: data.waterIntake,
+        });
     }
 
     @Post('startTracker')
@@ -122,7 +148,13 @@ export class PersonalController {
                 message: 'Invalid Token',
             };
         }
-        return this.contentService.startTracker(data);
+        else if (isValid.success !== 'true') {
+            return isValid;
+        }
+        return this.contentService.startTracker({
+            courseId: data.courseId,
+            UserId: isValid.data.id,
+        });
     }
 
     @Post('endTracker')
@@ -142,9 +174,9 @@ export class PersonalController {
         return this.contentService.endTracker(data);
     }
 
-    @Get('getFood/:userId')
+    @Get('getFood')
     @ApiBearerAuth()
-    async getFoodIntakes(@Param('userId') userId: string, @Headers('Authorization') auth: string){
+    async getFoodIntakes(@Headers('Authorization') auth: string){
         const token = auth
         const isValid = await this.authService.validateUserToken(token);
         if (!isValid) {
@@ -154,13 +186,15 @@ export class PersonalController {
                 code: 401,
                 message: 'Invalid Token',
             };
+        }else if (isValid.success !== 'true') {
+            return isValid;
         }
-        return this.contentService.getFood(userId);
+        return this.contentService.getFood(isValid.data.id);
     }
 
-    @Get('getSleep/:userId')
+    @Get('getSleep')
     @ApiBearerAuth()
-    async getSleepTimes(@Param('userId') userId: string, @Headers('Authorization') auth: string){
+    async getSleepTimes( @Headers('Authorization') auth: string){
         const token = auth
         const isValid = await this.authService.validateUserToken(token);
         if (!isValid) {
@@ -170,13 +204,15 @@ export class PersonalController {
                 code: 401,
                 message: 'Invalid Token',
             };
+        }else if (isValid.success !== 'true') {
+            return isValid;
         }
-        return this.contentService.getSleep(userId);
+        return this.contentService.getSleep(isValid.data.id);
     }
 
-    @Get('getWater/:userId')
+    @Get('getWater')
     @ApiBearerAuth()
-    async getWaterIntakes(@Param('userId') userId: string, @Headers('Authorization') auth: string){
+    async getWaterIntakes( @Headers('Authorization') auth: string){
         const token = auth
         const isValid = await this.authService.validateUserToken(token);
         if (!isValid) {
@@ -186,13 +222,15 @@ export class PersonalController {
                 code: 401,
                 message: 'Invalid Token',
             };
+        }else if (isValid.success !== 'true') {
+            return isValid;
         }
-        return this.contentService.getWater(userId);
+        return this.contentService.getWater(isValid.data.id);
     }
 
-    @Get('getBody/:userId')
+    @Get('getBody')
     @ApiBearerAuth()
-    async getBody(@Param('userId') userId: string, @Headers('Authorization') auth: string){
+    async getBody(@Headers('Authorization') auth: string){
         const token = auth
         const isValid = await this.authService.validateUserToken(token);
         if (!isValid) {
@@ -202,8 +240,10 @@ export class PersonalController {
                 code: 401,
                 message: 'Invalid Token',
             };
+        }else if (isValid.success !== 'true') {
+            return isValid;
         }
-        return this.contentService.getBody(userId);
+        return this.contentService.getBody(isValid.data.id);
     }
 
     @Put('updateBody')
@@ -223,20 +263,22 @@ export class PersonalController {
         return this.contentService.updateBody(data);
     }
 
-    @Get('getTracker/:userId')
+    @Get('getTracker')
     @ApiBearerAuth()
-    async getTracker(@Param('userId') userId: string, @Headers('Authorization') auth: string){
+    async getTracker( @Headers('Authorization') auth: string){
         const token = auth
         const isValid = await this.authService.validateUserToken(token);
-        if (!isValid) {
+        if (!isValid ) {
             return {
                 status: false,
                 type: 'error',
                 code: 401,
                 message: 'Invalid Token',
             };
+        }else if (isValid.success !== 'true') {
+            return isValid;
         }
-        return this.contentService.getTracker(userId);
+        return this.contentService.getTracker(isValid.data.id);
     }
 
 }

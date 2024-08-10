@@ -40,6 +40,8 @@ export class CourseController {
                 code: 401,
                 message: 'Invalid Token',
             };
+        } else if (isValid.success !== 'true') {
+            return isValid;
         }
         return this.contentService.enrollCourse(data);
     }
@@ -56,6 +58,8 @@ export class CourseController {
                 code: 401,
                 message: 'Invalid Token',
             };
+        } else if (isValid.success !== 'true') {
+            return isValid;
         }
         return this.contentService.getUserCourses(id);
     }
@@ -72,6 +76,8 @@ export class CourseController {
                 code: 401,
                 message: 'Invalid Token',
             };
+        }else if (isValid.success !== 'true') {
+            return isValid;
         }
         return this.contentService.getUserSchedule(id);
     }

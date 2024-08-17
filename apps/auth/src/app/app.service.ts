@@ -321,9 +321,13 @@ export class AuthService {
       expiresIn: process.env.EXPIRESINACCESS,
     });
 
+    const expiresIn = new Date();
+    expiresIn.setHours(expiresIn.getHours() + 2);
+
+   
     return {
       accessToken,
-      expiresIn: process.env.EXPIRESINACCESS,
+      expiresIn,
     };
   }
 

@@ -67,6 +67,7 @@ export class AuthService {
       refreshToken: tokenRefresh.refreshToken,
       refreshTokenExpiry: tokenRefresh.refreshTokenExpiry,
       accessToken: tokenAccess.accessToken,
+      expiresIn: tokenAccess.expiresIn,
     };
   
     return status;
@@ -304,10 +305,10 @@ export class AuthService {
       success: true,
       type: 'success',
       data: {
-        ...user,
         refreshToken: tokenRefresh.refreshToken,
         refreshTokenExpiry: tokenRefresh.refreshTokenExpiry,
         accessToken: tokenAccess.accessToken,
+        expiresIn: tokenAccess.expiresIn,
       }
     };
   }
@@ -322,6 +323,7 @@ export class AuthService {
 
     return {
       accessToken,
+      expiresIn: process.env.EXPIRESINACCESS,
     };
   }
 
@@ -349,6 +351,7 @@ export class AuthService {
 
     return {
       refreshToken,
+      refreshTokenExpiry,
     };
   }
 
@@ -402,6 +405,7 @@ export interface RegistrationStatus {
     refreshToken: string;
     refreshTokenExpiry: Date;
     accessToken: string;
+    expiresIn: string;
   };
 
   }
